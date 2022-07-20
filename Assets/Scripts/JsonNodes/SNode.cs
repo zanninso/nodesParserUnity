@@ -31,12 +31,33 @@ public class SNode:Node
 			rotation[1] = r[1].Value<int>();
 			rotation[2] = r[2].Value<int>();
 		}
+
+		public override string ToString(int level = 0, int depth = 1)
+		{
+			StringBuilder sb = new StringBuilder();
+			String tabs = String.Concat(Enumerable.Repeat("\t", level));
+
+			sb.Append(tabs)
+			  .Append("position: [")
+					.Append(position[0]).Append(",")
+					.Append(position[1]).Append(",")
+					.Append(position[2]).Append(",")
+			  .Append("]").Append(Environment.NewLine);
+
+			sb.Append(tabs)
+			  .Append("rotation: [")
+					.Append(rotation[0]).Append(",")
+					.Append(rotation[1]).Append(",")
+					.Append(rotation[2]).Append(",")
+			  .Append("]").Append(Environment.NewLine);
+			return sb.ToString();
+		}
 	}
 
 	public int startTime;
 	public int endTime;
 	public Origin origin;
-	public List<SNodeElement> nodeElements = new List<SNodeElement>(); // dictionary
+	public  Dictionary<String, SNodeElement> nodeElements = new Dictionary<String, SNodeElement>();
 
 
 	public SNode(JObject jObj) : base(jObj)
@@ -46,7 +67,9 @@ public class SNode:Node
 		origin = new Origin(jObj["origin"].ToObject<JObject>());
 		foreach (JToken token in ((JArray)jObj["nodeElements"]))
 		{
-			nodeElements.Add(new SNodeElement(token.ToObject<JObject>()));
+			SNodeElement elem = new SNodeElement(token.ToObject<JObject>());
+			String key = elem.id;
+			nodeElements.Add(key, elem);
 		}
 	}
 
@@ -55,7 +78,7 @@ public class SNode:Node
 		StringBuilder sb = new StringBuilder();
 		String tabs = String.Concat(Enumerable.Repeat("\t", level));
 
-		sb.Append(base.ToString());
+		sb.Append(base.ToString(level, depth));
 
 		sb.Append(tabs)
 		  .Append("startTime: ").Append(startTime)
@@ -66,22 +89,31 @@ public class SNode:Node
 		  .Append(Environment.NewLine);
 
 		sb.Append(tabs).Append("origin:").Append(Environment.NewLine);
-		sb.Append(origin.ToString(level + 1, depth - 1));
+		sb.Append(origin.ToString(level + 1, depth));
 
 		if (depth > 0)
 		{
-			foreach (SNodeElement nodeElement in nodeElements)
+			sb.Append(tabs).Append("nodeElements:[").Append(Environment.NewLine);
+			foreach (String key in nodeElements.Keys)
 			{
-				sb.Append(tabs).Append("condition:").Append(Environment.NewLine);
-				sb.Append(nodeElement.ToString(level + 1, depth - 1));
+				sb.Append(nodeElements[key].ToString(level + 1, depth - 1))
+				  .Append(tabs).Append(",").Append(Environment.NewLine);
 			}
+			sb.Append(tabs).Append("]").Append(Environment.NewLine);
 		}
 		else
 			sb.Append(tabs)
-				.Append(String.Format("condition: [{0}]", nodeElements.Count))
+				.Append(String.Format("nodeElements: [{0}]", nodeElements.Count))
 				.Append(Environment.NewLine);
 
 		return sb.ToString();
+	}
+
+	public override BaseNode findById(string key)
+	{
+		if (nodeElements.ContainsKey(key))
+			return nodeElements[key];
+		throw new Exception("key not found");
 	}
 }
 

@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{32C3BDE6-E125-3128-82C1-25D0441455A3}</ProjectGuid>
+    <ProjectGuid>{BA7180C0-9EAF-1F3D-BCB1-6B5A5585830D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -57,10 +57,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/JsonNodes/Root.cs" />
+    <Compile Include="Assets/Scripts/Actions/IAction.cs" />
+    <Compile Include="Assets/Scripts/Menu/Menu.cs" />
+    <Compile Include="Assets/Scripts/Actions/AAction.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/SNodElements/CharacterElements/CharacterElement.cs" />
+    <Compile Include="Assets/Scripts/Menu/MenuOption.cs" />
+    <Compile Include="Assets/Scripts/Actions/JsonLoader.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/SNodElements/Character.cs" />
+    <Compile Include="Assets/Scripts/Menu/MenuOptions.cs/OptionBackSelection.cs" />
+    <Compile Include="Assets/Scripts/GlobalStorage.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/SNode.cs" />
+    <Compile Include="Assets/Scripts/Menu/MenuOptions.cs/OptionPrint.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/Condition.cs" />
+    <Compile Include="Assets/Scripts/Menu/MenuOptions.cs/OptionSelectById.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/LNode.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/Node.cs" />
     <Compile Include="Assets/Scripts/JsonNodes/SNodElements/Sound.cs" />

@@ -11,7 +11,7 @@ public class Character:BaseNode
     public int startTime;
     public int endTime;
     public String model;
-    public List<CharacterElement> elements = new List<CharacterElement>();
+    public Dictionary<String, CharacterElement> elements = new Dictionary<String, CharacterElement>();
 
 	public Character(JObject jObj):base(jObj)
 	{
@@ -23,7 +23,9 @@ public class Character:BaseNode
 
         foreach (JToken token in ((JArray)jObj["elements"]))
         {
-            elements.Add(new CharacterElement(token.ToObject<JObject>()));
+			CharacterElement elem = new CharacterElement(token.ToObject<JObject>());
+			String key = elem.id;
+			elements.Add(key, elem);
         }
     }
 
@@ -54,18 +56,27 @@ public class Character:BaseNode
 
 		if (depth > 0)
 		{
-			foreach (CharacterElement nodeElement in elements)
+			sb.Append(tabs).Append("elements:[").Append(Environment.NewLine);
+			foreach (String key in elements.Keys)
 			{
-				sb.Append(tabs).Append("condition:").Append(Environment.NewLine);
-				sb.Append(nodeElement.ToString(level + 1, depth - 1));
+				sb.Append(elements[key].ToString(level + 1, depth - 1));
+				sb.Append(tabs).Append(",").Append(Environment.NewLine);
 			}
+			sb.Append(tabs).Append("]").Append(Environment.NewLine);
 		}
 		else
 			sb.Append(tabs)
-				.Append(String.Format("condition: [{0}]", elements.Count))
-				.Append(Environment.NewLine);
+			  .Append(String.Format("elements: [{0}]", elements.Count))
+			  .Append(Environment.NewLine);
 
 		return sb.ToString();
+	}
+
+	public override BaseNode findById(string key)
+	{
+		if (elements.ContainsKey(key))
+			return elements[key];
+		throw new Exception("key not found");
 	}
 }
 

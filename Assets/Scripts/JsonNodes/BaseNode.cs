@@ -8,12 +8,15 @@ public abstract class BaseNode
 	[System.AttributeUsage(System.AttributeTargets.Field | AttributeTargets.Property)]
     public class Optional : System.Attribute {}
 
+    [System.AttributeUsage(System.AttributeTargets.Field | AttributeTargets.Property)]
+    public class Ignore : System.Attribute { }
+
     static Dictionary<String, String> types = new Dictionary<String, String> {
         {typeof(int).ToString(), "Integer"},
         {typeof(string).ToString(), "String"},
         {typeof(bool).ToString(), "Boolean"},
         {typeof(List<>).ToString().Substring(0, typeof(List<>).ToString().IndexOf("`")), "Array"},
-        {typeof(Dictionary<,>).ToString().Substring(0, typeof(List<>).ToString().IndexOf("`")), "Array"},
+        {typeof(Dictionary<,>).ToString().Substring(0, typeof(Dictionary<,>).ToString().IndexOf("`")), "Array"},
         {typeof(int[]).ToString(), "Array"},
     };
 
@@ -31,6 +34,10 @@ public abstract class BaseNode
         // checking for bad field types 
         foreach (FieldInfo field in this.GetType().GetRuntimeFields())
         {
+            // to skip field annotated with Ignore
+            if (field.GetCustomAttribute(typeof(Ignore), false) != null)
+                continue;
+
             String fieldType = types.GetValueOrDefault(cleanType(field.FieldType.ToString()), "Object");
             if (jObj.ContainsKey(field.Name))
             {
@@ -48,5 +55,9 @@ public abstract class BaseNode
 
     public abstract string ToString(int level = 0, int depth = 1);
 
+    public virtual BaseNode findById(string key)
+    {
+        throw new Exception("Not findable");
+    }
 }
 

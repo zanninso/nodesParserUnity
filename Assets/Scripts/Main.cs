@@ -7,28 +7,40 @@ using Newtonsoft.Json.Linq;
 
 public class Main : MonoBehaviour
 {
-    //public TextMeshProUGUI title;
-    //public TMP_InputField input;
+    public TextMeshProUGUI title;
+    public TMP_InputField input;
+    private IAction currentAction;
     // Start is called before the first frame update
     public void RunAction() {
-        //print(input.text);
+        Debug.ClearDeveloperConsole();
+        setAction(currentAction.run());
     }
 
     void Start()
     {
-        //title.text = "Path to json file:";
-        //input.getText();
-        print(typeof(int[]).ToString());
-        print("mzyan a sidi");
-        String jsonText = System.IO.File.ReadAllText("/Users/user/My project (1)/main.json");
-        JObject obj = JObject.Parse(jsonText);
-        Root root = new Root(obj);
 
+        GlobalStorage.getInstace().title = title;
+        GlobalStorage.getInstace().input = input;
+
+        Menu menuAction = new Menu();
+        menuAction.SetOption(new OptionPrint("Print Current Node"));
+        menuAction.SetOption(new OptionBackSelection("Select Parent"));
+        menuAction.SetOption(new OptionSelectById("Select Element By Id", "Id to select element"));
+
+        AAction jsonLoaderAction = new JsonLoader();
+        jsonLoaderAction.setNextAction(menuAction);
+
+        setAction(jsonLoaderAction);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void setAction(IAction action) {
+        currentAction = action;
+        currentAction.start();
     }
 }

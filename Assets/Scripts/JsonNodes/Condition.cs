@@ -16,6 +16,22 @@ public class Condition:BaseNode
 			desiredEventValue = jObj["desiredEventValue"].Value<int>();
 			eventType = jObj["eventType"].Value<String>();
 		}
+
+		public override string ToString(int level = 0, int depth = 1)
+		{
+			StringBuilder sb = new StringBuilder();
+			String tabs = String.Concat(Enumerable.Repeat("\t", level));
+
+			sb.Append(tabs)
+			  .Append("desiredEventValue: ").Append(desiredEventValue)
+			  .Append(Environment.NewLine);
+
+			sb.Append(tabs)
+			  .Append("eventType: ").Append(eventType)
+			  .Append(Environment.NewLine);
+
+			return sb.ToString();
+		}
 	}
 
 	public String conditionType;
@@ -37,7 +53,7 @@ public class Condition:BaseNode
 		  .Append(Environment.NewLine);
 
 		sb.Append(tabs).Append("event:").Append(Environment.NewLine);
-		sb.Append(@event.ToString(level + 1, depth - 1));
+		sb.Append(@event.ToString(level + 1, depth));
 
 		return sb.ToString();
 	}

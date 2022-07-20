@@ -24,15 +24,17 @@ public class LNode:Node
 		StringBuilder sb = new StringBuilder();
 		String tabs = String.Concat(Enumerable.Repeat("\t", level));
 
-		sb.Append(base.ToString());
+		sb.Append(base.ToString(level, depth));
 
 		if (depth > 0)
 		{
+			sb.Append(tabs).Append("conditions:[").Append(Environment.NewLine);
 			foreach (Condition condition in conditions)
 			{
-				sb.Append(tabs).Append("condition:").Append(Environment.NewLine);
-				sb.Append(condition.ToString(level + 1, depth - 1));
+				sb.Append(condition.ToString(level + 1, depth - 1))
+				  .Append(tabs).Append(",").Append(Environment.NewLine);
 			}
+			sb.Append(tabs).Append("]").Append(Environment.NewLine);
 		}
 		else
 			sb.Append(tabs)
@@ -40,6 +42,14 @@ public class LNode:Node
 				.Append(Environment.NewLine);
 
 		return sb.ToString();
+	}
+
+	public override BaseNode findById(string key)
+	{
+		int idx = int.Parse(key);
+		if (idx>= 0 && idx < conditions.Count)
+			return conditions[idx];
+		throw new Exception("key not found");
 	}
 }
 
